@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+		<script src="ajax.js"></script>
+		<script src="jquery.min.js"></script>
+	</head>
+	<style>
+		* {
+			padding: 0px;
+			margin: 0px;
+			list-style: none;
+		}
+		
+		.box {
+			width: 800px;
+			height: auto;
+			margin: 50px auto;
+			border: 1px solid blue;
+		}
+		
+		.head {
+			width: 100%;
+			height: 30px;
+			text-align: center;
+		}
+		
+		table {
+			width: 800px;
+			height: auto;
+			margin: 0px auto;
+			border: 1px solid pink;
+			table-layout: fixed;
+			border-collapse: collapse;
+		}
+		
+		tr,
+		th,
+		td {
+			width: 100%;
+			height: 30px;
+			text-align: center;
+			line-height: 30px;
+			border: 1px solid pink;
+			cursor: pointer;
+		}
+		
+		.del {
+			color: red;
+		}
+		
+		.add {
+			margin-left: 300px;
+			border-radius: 10%;
+			font-size: 14px;
+			color: white;
+			height: 30px;
+			width: 200px;
+			cursor: pointer;
+			background: green;
+		}
+	</style>
+
+	<body>
+		<div class="box">
+			<div class="head">学生信息表</div>
+			<table cellspacing="0" cellpadding="0">
+
+				<tr>
+					<th>学号</th>
+					<th>姓名</th>
+					<th>年龄</th>
+					<th>性别</th>
+					<th>编辑</th>
+
+				</tr>
+				<tr>
+					<td>Data</td>
+					<td>Data</td>
+					<td>Data</td>
+					<td>Data</td>
+					<td>
+						<div class="del">删除</div>
+					</td>
+				</tr>
+				<tr>
+					<td>Data</td>
+					<td>Data</td>
+					<td>Data</td>
+					<td>Data</td>
+					<td>
+						<div class="del">删除</div>
+					</td>
+				</tr>
+			</table>
+			<input type="button" class="add" value="添加" />
+		</div>
+
+	</body>
+
+</html>
+<script>
+//window.onload=function(){
+//	var tbody=document.querySelector("tbody");
+////	查询数据
+//	ajax({
+//		url:"select.php",
+//		dataType:"json",
+//		success:function(text){
+//			var str="";	
+//			for(var i=0;i<text.length;i++){
+//				str+="<tr id="+text[i].id+">";
+//					str+="<td class='name'>"+text[i].name+"</td>";
+//					str+="<td class='age'>"+text[i].age+"</td>";
+//					str+="<td class='sex'>"+text[i].sex+"</td>";
+//					str+="<td class='xiugai'>"+"<a class='del' id="+text[i].id+" href='##'>删除</a>"+"</td>";
+//				str+="</tr>";
+//			}
+//			tbody.innerHTML=str;		
+//		}
+//	})
+////添加数据 	
+//	var add=document.querySelector(".add");
+//	add.onclick=function(){
+//		ajax({
+//			url:"add.php",
+//			success:function(text){
+//				if(text){
+//					var tr=document.createElement("tr");
+//					tr.id=text;
+//					var str="<td class='name'></td>";
+//					str+="<td class='age'></td>";
+//					str+="<td class='sex'></td>";
+//					str+="<td class='xiugai'>"+"<a class='del' id="+text+" href='##'>删除</a>"+"</td>";
+//					tr.innerHTML=str;
+//					tbody.appendChild(tr);
+//				}else{
+//					alert("添加失败！");
+//				}
+//			}
+//		})
+//	}
+////事件委派
+//	tbody.onclick=function(e){
+//	var ev=e||window.event;	
+//	var obj=ev.target||ev.srcElement;
+////删除数据
+//	if(obj.className=="del"){	
+//		ajax({
+//			url:"del.php",
+//			data:"id="+obj.id,
+//				success:function(text){
+//					if(text==1){
+//						tbody.removeChild(obj.parentNode.parentNode);
+//						obj.parentNode.parentNode=null;
+//					}
+//				}
+//			})
+//	}	
+//	}
+////修改数据  	
+////	tbody.ondblclick=function(e){
+////		var obj=e.target||e.srcElement;
+////		if(obj.nodeName=="TD"&&obj.className!="xiugai"){
+////			var input=document.createElement("input");
+////			var val=obj.innerHTML;
+////			input.style.cssText="text-align:center;width:100%;height:100%;border:none;"     //设置修改时文本框属性
+////			input.value=val;
+////			obj.innerHTML="";
+////			obj.appendChild(input);
+////			input.focus();
+////			input.onblur=function(){
+////				var name=obj.getAttribute("class");
+////				var value=input.value;
+////				if(value==val){
+////					obj.innerHTML=val;
+////				}else{
+////					ajax({
+////						url:"update.php",
+////							data:{"id":obj.parentNode.id,"name":name,"value":value},
+////							success:function(text){
+////								if(text==1){
+	                                    
+////									obj.innerHTML=value;
+////								}
+////							}
+////					})	
+////				}
+////			}
+////		}
+////	}
+//	
+//	
+//	
+//// 另一种修改 	用jquery方式（IE9以下不支持）
+//$("tbody").delegate("td:not(.xiugai)","dblclick",function(){
+//	  $(this).attr("contenteditable",true);
+//	  $(this).focus();
+//	  var id=$(this).parent().attr("id");
+//	  var name=$(this).attr("class");
+//	  var oldval=$(this).text();
+//    var that=$(this);
+//	  $(this).focusout(function(){
+//	  	var newval=that.text();
+//	  	    if(oldval==newval){
+//	  	    	that.text(oldval);
+//	  	    }else{
+//				$.ajax({
+//					url:"update.php",
+//					data:{"id":id,"name":name,"value":newval},					
+//					success:function(text){
+//						alert("修改成功!")
+//					}
+//				})		  	    	
+//	  	    }
+//	 })	  
+// })
+//
+//
+//
+//
+//
+//}
+//
+ window.onload=function(){
+//查
+var tbody=document.querySelector("tbody");
+ajax({
+	url:"select.php",
+	dataType:"json",
+	success:function(text){
+		var str="";		
+		for(var i=0;i<text.length;i++){
+			str+="<tr id="+text[i].id+">";
+			str+="<td class='name'>"+text[i].name+"</td>";
+			str+="<td class='age'>"+text[i].age+"</td>";
+			str+="<td class='sex'>"+text[i].sex+"</td>";
+			str+="<td class='xiugai'>"+"<a class='del' id="+text[i].id+">删除</a>"+"</td>";
+			str+="</tr>";
+		}
+		tbody.innerHTML=str;
+	}
+})
+//添加
+var add=document.querySelector(".add");
+add.onclick=function(){	
+	ajax({
+		url:"add.php",
+		success:function(text){
+			if(text){
+				var tr=document.createElement("tr");
+				tr.id=text;
+				var str="<td class='name'></td>";
+				str+="<td class='age'></td>";
+				str+="<td class='sex'></td>";
+				str+="<td class='xiugai'>"+"<a class='del' id="+text+" href='##'>删除</a>"+"</td>";
+				tr.innerHTML=str;
+				tbody.appendChild(tr);
+			}else{
+				alert("添加失败！");
+			}
+		}
+	})
+}
+//删除
+tbody.onclick=function(e){
+	var e=e||window.event;
+	var obj=e.target||e.srcElement;
+	if(obj.className=="del"){
+		ajax({
+			url:"del.php",
+			data:"id="+obj.id,
+			success:function(text){
+				if(text==1){
+					tbody.removeChild(obj.parentNode.parentNode);
+					obj.parentNode.parentNode=null;
+				}
+			}
+		})
+	}
+}
+//修改	
+	tbody.ondblclick=function(e){
+		var obj=e.target||e.srcElement;
+		if(obj.nodeName=="TD"&&obj.className!="xiugai"){
+			var input=document.createElement("input");
+			var val=obj.innerHTML;
+			input.style.cssText="text-align:center;width:100%;height:100%;border:none;"     //设置修改时文本框属性
+			input.value=val;
+			obj.innerHTML="";
+			obj.appendChild(input);
+			input.focus();
+			input.onblur=function(){
+				var name=obj.getAttribute("class");
+				var value=input.value;
+				if(value==val){
+					obj.innerHTML=val;
+				}else{
+					ajax({
+						url:"update.php",
+							data:{"id":obj.parentNode.id,"name":name,"value":value},
+							success:function(text){
+								if(text==1){	                                    
+									obj.innerHTML=value;
+								}
+							}
+					})	
+				}
+			}
+		}
+	}	 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ 	
+ }
+  
+  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+  
+</script>
